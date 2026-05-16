@@ -1,6 +1,7 @@
 package org.example.zhprogkorny.service;
 
 import org.example.zhprogkorny.model.Plant;
+import org.example.zhprogkorny.model.WateringLog;
 import org.example.zhprogkorny.repository.PlantRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,5 +33,9 @@ public class PlantService {
 
     public void deletePlant(Long id) {
         plantRepository.deleteById(id);
+    }
+
+    public WateringLog addWateringLog(Long id, int amount) {
+        return null;
     }
 }
