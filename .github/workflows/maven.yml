@@ -1,0 +1,42 @@
+name: Java CI with Maven
+
+# Mikor induljon el? (Amikor pusholsz a main vagy master ágra)
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest # Egy Linux szerveren fog futni
+
+    # Elindítunk egy PostgreSQL adatbázist a tesztekhez a felhőben is
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: plantdb
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Kód letöltése
+        uses: actions/checkout@v4
+
+      - name: Java 21 beállítása
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Maven Build, Tesztek és Checkstyle futtatása
+        run: mvn -B clean test checkstyle:check
